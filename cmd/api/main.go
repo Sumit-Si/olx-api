@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	cfg :=config.MustLoad()
+	cfg := config.MustLoad()
 
 	// --------- BAD PRACTICE START (it is exposed to global - anyone can access it) ------------
 	http.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +33,7 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
-		w.Write([]byte(`{"status": "ok"}`))
+		w.Write([]byte(`{"status": "okay"}`))
 	})
 
 	srv := http.Server{
