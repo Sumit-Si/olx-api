@@ -4,9 +4,13 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/sumit-si/olx-api/internal/config"
 )
 
 func main() {
+	cfg :=config.MustLoad()
+
 	// --------- BAD PRACTICE START (it is exposed to global - anyone can access it) ------------
 	http.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -33,11 +37,11 @@ func main() {
 	})
 
 	srv := http.Server{
-		Addr: ":8090",
-		Handler: mux,
-		ReadTimeout: time.Second * 10,
+		Addr:         ":" + cfg.Port,
+		Handler:      mux,
+		ReadTimeout:  time.Second * 10,
 		WriteTimeout: time.Second * 30,
-		IdleTimeout: time.Second * 60,
+		IdleTimeout:  time.Second * 60,
 	}
 
 	if err := srv.ListenAndServe(); err != nil {
