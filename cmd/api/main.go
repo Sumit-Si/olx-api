@@ -1,16 +1,25 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/sumit-si/olx-api/internal/config"
+	"github.com/sumit-si/olx-api/internal/db"
 	"github.com/sumit-si/olx-api/internal/handlers"
 )
 
 func main() {
 	cfg := config.MustLoad()
+	_, err := db.Connect(cfg.DatabaseUrl)
+	if err != nil {
+		log.Fatalf("main.db.connect: %v", err)		// same as exit = Fatalf in nodejs
+	}
+
+	fmt.Println("database connected")
+	fmt.Println("starting olx server...")
 
 	// --------- BAD PRACTICE START (it is exposed to global - anyone can access it) ------------
 	// http.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
