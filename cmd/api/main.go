@@ -30,12 +30,14 @@ func main() {
 	// })
 	// --------- BAD PRACTICE END ------------
 
+	lh := handlers.NewListingHandler(db)
+
 	// TO FIX IT: we can create a new Router(MUX in GO)
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /healthz", handlers.Health)
-	mux.HandleFunc("GET /listings", handlers.List(db))
-	mux.HandleFunc("DELETE /listings/{id}", handlers.DeleteListing(db))
+	mux.HandleFunc("GET /listings", lh.List)
+	mux.HandleFunc("DELETE /listings/{id}", lh.Delete)
 
 	srv := http.Server{
 		Addr:         ":" + cfg.Port,
