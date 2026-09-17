@@ -57,3 +57,25 @@ func List(db *sql.DB) http.HandlerFunc {
 	}
 
 }
+
+func DeleteListing(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := r.PathValue("id")
+		// fmt.Println("id", id)
+
+		_, err := db.Exec(
+			`DELETE FROM listings WHERE id = $1`,
+			id)
+
+		if err != nil {
+			log.Println("delete: %w", err)
+			http.Error(w, "internal error", http.StatusInternalServerError)
+			return
+		}
+
+		// Production grade apps security note: don't send anything like record not found or record not deleted. always send success response for DELETE endpoint with 204
+
+		// rows, err := result.RowsAffected()
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
